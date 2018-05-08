@@ -1,2 +1,0 @@
-# codypaste-service
-

@@ -1,0 +1,20 @@
+{
+  "name": "codypaste-service",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "eslint": "^4.19.1",
+    "koa": "^2.5.1",
+    "winston": "^2.4.2"
+  },
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-plugin-import": "^2.7.0",
+    "nodemon": "^1.11.0"
+  },
+  "scripts": {
+    "start": "node index.js"
+  }
+}
