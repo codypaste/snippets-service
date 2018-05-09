@@ -1,8 +1,11 @@
 {
+  "application": {
     "PORT": 3000,
-    "database": {
-        "host": "mongo_database",
-        "port": 27017,
-        "dbName": "codypaste"
-    }
+    "host": "localhost"
+  },
+  "database": {
+    "host": "mongo_database",
+    "port": 27017,
+    "dbName": "codypaste_snippets"
+  }
 }

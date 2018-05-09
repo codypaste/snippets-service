@@ -7,7 +7,10 @@
     "config": "^1.30.0",
     "eslint": "^4.19.1",
     "koa": "^2.5.1",
+    "koa-router": "^7.4.0",
+    "mocha": "^5.1.1",
     "mongoose": "^5.0.17",
+    "supertest": "^3.0.0",
     "winston": "^2.4.2"
   },
   "devDependencies": {
@@ -17,6 +20,7 @@
     "nodemon": "^1.11.0"
   },
   "scripts": {
-    "start": "./node_modules/.bin/nodemon --inspect=0.0.0.0:5858 --ignore test/ index.js"
+    "start": "./node_modules/.bin/nodemon --inspect=0.0.0.0:5858 --ignore test/ index.js",
+    "test": "cd ./test/ && mocha *"
   }
 }
