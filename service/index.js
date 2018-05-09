@@ -1,6 +1,6 @@
-const { PORT } = require('./config/defaults');
+const config = require('config');
 
 const { service } = require('./src/service');
 
-service().start(PORT);
+service().start(config.get('PORT'));
 

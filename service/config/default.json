@@ -1,0 +1,8 @@
+{
+    "PORT": 3000,
+    "database": {
+        "host": "mongo_database",
+        "port": 27017,
+        "dbName": "codypaste"
+    }
+}

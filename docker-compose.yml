@@ -1,0 +1,22 @@
+version: '2'
+
+services:
+  codypaste-service: 
+    build: .
+    container_name: codypaste-service
+    volumes:
+      - ./service/logs:/usr/src/app/logs
+      - ./service/src:/usr/src/app/src
+    command: ['sh', '-c', 'yarn start']
+    ports:
+      - 3000:3000
+    links:
+      - mongoDB
+
+  mongoDB:
+    image: mongo:latest
+    container_name: mongo_database
+    volumes:
+      - /home/mongo:/data/db
+    ports:
+    - "27017:27017"
