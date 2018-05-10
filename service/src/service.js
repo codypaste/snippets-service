@@ -10,9 +10,9 @@ const app = new Koa();
 const router = new Router();
 
 const service = () => {
-  const start = (port) => {
+  const start = async (port) => {
     // Connecting to database
-    mongoDB(config.get('database')).connect();
+    await mongoDB(config.get('database')).connect();
 
     app
       .use(router.routes())

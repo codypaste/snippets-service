@@ -1,6 +1,12 @@
 const config = require('config');
 
+const logger = require('./src/utils/logger');   
 const { service } = require('./src/service');
 
-service().start(config.get('application.PORT'));
-
+(async () => {
+  try {
+    await service().start(config.get('application.PORT'));
+  } catch (e) {
+    process.exit(1);
+  }
+})();
