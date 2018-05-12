@@ -4,15 +4,15 @@ const Router = require('koa-router');
 const config = require('config');
 const logger = require('./utils/logger');
 const mongoDB = require('./database/mongoDB');
-const routesHandler = require('./REST/routesHandler');
+const routesHandler = require('./rest/routesHandler');
 
 const app = new Koa();
 const router = new Router();
 
 const service = () => {
-  const start = (port) => {
+  const start = async (port) => {
     // Connecting to database
-    mongoDB(config.get('database')).connect();
+    await mongoDB(config.get('database')).connect();
 
     app
       .use(router.routes())
