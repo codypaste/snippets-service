@@ -1,25 +1,23 @@
-const snippetsActivities = require('../activities/snippetsActivities')();
+const {
+  createSnippet,
+  getSnippet,
+  deleteSnippet,
+  searchForSnippet,
+} = require('./controllers/snippetsControllers').snippetsController();
+const {
+  createGroup,
+  getGroup,
+} = require('./controllers/groupsControllers').groupsController();
 
 module.exports = (router) => {
-  router.post('/snippets', async (ctx, next) => {
-    // const createdSnippet = await snippetsActivities.createNew(ctx.params.id);
-    // ctx.body = createdSnippet;
-    ctx.body = 'Created!';
-    ctx.status = 201;
-    await next();
-  });
 
-  router.get('/snippets/:id', async (ctx, next) => {
-    const snippet = await snippetsActivities.getSingle(ctx.params.id);
-    ctx.body = snippet;
-    ctx.status = 201;
-    await next();
-  });
+  // Snippets routes
+  router.post('/snippets', createSnippet);
+  router.get('/snippets/:id', getSnippet);
+  router.delete('/snippets/:id', deleteSnippet);
+  router.post('/snippets/_search', searchForSnippet);
 
-  router.delete('/snippets/:id', async (ctx, next) => {
-    const snippet = await snippetsActivities.deleteSingle(ctx.params.id);
-    ctx.body = snippet;
-    ctx.status = 201;
-    await next();
-  });
+  // Groups routes
+  router.post('/groups', createGroup);
+  router.get('/groups/:id', getGroup);
 };

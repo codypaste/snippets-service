@@ -6,10 +6,15 @@
   "dependencies": {
     "config": "^1.30.0",
     "eslint": "^4.19.1",
+    "joi": "^13.3.0",
+    "joi-objectid": "^2.0.0",
     "koa": "^2.5.1",
+    "koa-bodyparser": "^4.2.0",
     "koa-router": "^7.4.0",
+    "lodash": "^4.17.10",
     "mocha": "^5.1.1",
     "mongoose": "^5.0.17",
+    "should": "^13.2.1",
     "supertest": "^3.0.0",
     "winston": "^2.4.2"
   },
@@ -21,6 +26,6 @@
   },
   "scripts": {
     "start": "./node_modules/.bin/nodemon --inspect=0.0.0.0:5858 --ignore test/ index.js",
-    "test": "cd ./test/ && mocha *"
+    "test": "cd ./test/functional && mocha *"
   }
 }

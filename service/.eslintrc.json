@@ -25,6 +25,7 @@
             {
                 "max": 1
             }
-        ]
+        ],
+        "padded-blocks": "off"
     }
 }

@@ -8,7 +8,7 @@ ADD ./service/package.json /usr/src/app/package.json
 
 ADD ./service /usr/src/app
 
-RUN yarn 
+RUN yarn
 
 EXPOSE 3000
 

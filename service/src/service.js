@@ -1,10 +1,12 @@
 const Koa = require('koa');
 const Router = require('koa-router');
-
+const bodyParser = require('koa-bodyparser');
 const config = require('config');
+
 const logger = require('./utils/logger');
 const mongoDB = require('./database/mongoDB');
 const routesHandler = require('./rest/routesHandler');
+const errorCatcher = require('./middlewares/errorCatcher');
 
 const app = new Koa();
 const router = new Router();
@@ -15,6 +17,8 @@ const service = () => {
     await mongoDB(config.get('database')).connect();
 
     app
+      .use(bodyParser())
+      .use(errorCatcher)
       .use(router.routes())
       .use(router.allowedMethods());
 
