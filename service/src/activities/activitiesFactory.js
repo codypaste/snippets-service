@@ -25,14 +25,14 @@ const groupJoiSchema = joi.object().keys({
 module.exports = {
   get snippets() {
     return activities({
-      MongooseModel: () => SnippetModel,
+      MongooseModel: SnippetModel,
       JoiSchema: snippetJoiSchema,
       getResourceBody: payload => payload,
     });
   },
   get groups() {
     return activities({
-      MongooseModel: () => GroupModel,
+      MongooseModel: GroupModel,
       JoiSchema: groupJoiSchema,
       getResourceBody: payload => payload,
     });

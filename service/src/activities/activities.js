@@ -8,20 +8,16 @@ module.exports = ({ MongooseModel, JoiSchema, getResourceBody }) => {
     const body = getResourceBody(payload);
 
     const schemaValidationError = inputValidationError(body, JoiSchema);
-    if (schemaValidationError !== null) {
+    if (schemaValidationError) {
       const error = Error(schemaValidationError);
       error.status = 422;
       throw new Error(schemaValidationError);
     }
 
-    const DBModel = MongooseModel();
-    return new DBModel(body).save();
+    return new MongooseModel(body).save();
   };
 
-  const getSingle = async (resourceId) => {
-    const dbModel = MongooseModel();
-    return dbModel.findById(resourceId);
-  };
+  const getSingle = async resourceId => MongooseModel.findById(resourceId);
 
   const deleteSingle = async (resourceId) => {
     const dbModel = MongooseModel();

@@ -12,7 +12,7 @@ const groupsController = () => {
   const getGroup = async (ctx, next) => {
     const group = await snippetsActivities.getSingle(ctx.params.id);
     ctx.body = group;
-    ctx.status = 201;
+    ctx.status = 200;
     await next();
   };
 

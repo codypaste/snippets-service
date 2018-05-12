@@ -12,14 +12,14 @@ const snippetsController = () => {
   const getSnippet = async (ctx, next) => {
     const snippet = await snippetsActivities.getSingle(ctx.params.id);
     ctx.body = snippet;
-    ctx.status = 201;
+    ctx.status = 200;
     await next();
   };
 
   const deleteSnippet = async (ctx, next) => {
     const snippet = await snippetsActivities.deleteSingle(ctx.params.id);
     ctx.body = snippet;
-    ctx.status = 201;
+    ctx.status = 204;
     await next();
   };
 
