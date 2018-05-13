@@ -1,15 +1,17 @@
 const { validatePayload } = require('./activityHelpers');
 
-module.exports = ({ OrmHelpers, JoiSchema, getResourceBody }) => {
+module.exports = ({ Dao, JoiSchema, getResourceBody }) => {
+
+  const { groupsDao } = Dao;
 
   const createNew = async (payload) => {
     const validPayload = validatePayload(getResourceBody(payload), JoiSchema);
-    return OrmHelpers.create(validPayload);
+    return groupsDao.create(validPayload);
   };
 
-  const getSingle = async resourceId => OrmHelpers.getSingle(resourceId);
+  const getSingle = async resourceId => groupsDao.getSingle(resourceId);
 
-  const deleteSingle = async resourceId => OrmHelpers.deleteSingle(resourceId);
+  const deleteSingle = async resourceId => groupsDao.deleteSingle(resourceId);
 
   // TODO
   const search = async payload => payload;

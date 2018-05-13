@@ -11,20 +11,20 @@ const groupForSnippetExists = async (groupID, groupsOrm) => {
   return true;
 };
 
-module.exports = ({ OrmHelpers, JoiSchema, getResourceBody }) => {
+module.exports = ({ Dao, JoiSchema, getResourceBody }) => {
 
-  const { snippetsOrm, groupsOrm } = OrmHelpers;
+  const { snippetsDao, groupsDao } = Dao;
 
   const createNew = async (payload) => {
     const validPayload = validatePayload(getResourceBody(payload), JoiSchema);
-    if (await groupForSnippetExists(validPayload.group, groupsOrm)) {
-      return snippetsOrm.create(validPayload);
+    if (await groupForSnippetExists(validPayload.group, groupsDao)) {
+      return snippetsDao.create(validPayload);
     }
   };
 
-  const getSingle = async resourceId => snippetsOrm.getSingle(resourceId);
+  const getSingle = async resourceId => snippetsDao.getSingle(resourceId);
 
-  const deleteSingle = async resourceId => snippetsOrm.deleteSingle(resourceId);
+  const deleteSingle = async resourceId => snippetsDao.deleteSingle(resourceId);
 
   // TODO
   const search = async payload => payload;
