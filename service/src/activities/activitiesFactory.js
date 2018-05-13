@@ -1,10 +1,11 @@
 const joi = require('joi');
 joi.objectId = require('joi-objectid')(joi);
 
-const activities = require('./activities');
+const snippetsActivities = require('./snippetsActivities');
+const groupsAvtivities = require('./groupsAvtivities');
 
-const { SnippetModel } = require('../database/models/SnippetModel');
-const { GroupModel } = require('../database/models/GroupModel');
+const snippetsOrm = require('../database/OrmHelpers/snippetsOrm');
+const groupsOrm = require('../database/OrmHelpers/groupsOrm');
 
 const snippetJoiSchema = joi.object().keys({
   snippet: joi.string().required(),
@@ -24,15 +25,18 @@ const groupJoiSchema = joi.object().keys({
 
 module.exports = {
   get snippets() {
-    return activities({
-      MongooseModel: SnippetModel,
+    return snippetsActivities({
+      OrmHelpers: {
+        snippetsOrm,
+        groupsOrm,
+      },
       JoiSchema: snippetJoiSchema,
       getResourceBody: payload => payload,
     });
   },
   get groups() {
-    return activities({
-      MongooseModel: GroupModel,
+    return groupsAvtivities({
+      OrmHelpers: groupsOrm,
       JoiSchema: groupJoiSchema,
       getResourceBody: payload => payload,
     });

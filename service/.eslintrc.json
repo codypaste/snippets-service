@@ -26,6 +26,7 @@
                 "max": 1
             }
         ],
-        "padded-blocks": "off"
+        "padded-blocks": "off",
+        "no-underscore-dangle":"off"    
     }
 }
