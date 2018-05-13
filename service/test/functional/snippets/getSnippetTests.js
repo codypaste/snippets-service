@@ -34,4 +34,14 @@ describe('Getting snippet GET /snippets', () => {
     snippetGetRes.statusCode.should.be.equal(200);
     snippetGetRes.body.group.should.be.equal(groupID);
   });
+
+  it('Should return 404 error when snippet does not exist', async () => {
+    const nonExistingSnippetID = '5af7690a2cc2e10062e047a8';
+
+    const getResponse = await snippetsTestHelpers
+      .getResource()
+      .getByID(nonExistingSnippetID);
+    getResponse.statusCode.should.be.equal(404);
+    getResponse.error.text.should.be.equal(`snippet with id ${nonExistingSnippetID} not found`);
+  });
 });

@@ -1,4 +1,5 @@
 const snippetsActivities = require('../../activities/activitiesFactory').snippets;
+const { entityNotFound } = require('../../errors');
 
 const snippetsController = () => {
 
@@ -10,7 +11,9 @@ const snippetsController = () => {
   };
 
   const getSnippet = async (ctx, next) => {
-    const snippet = await snippetsActivities.getSingle(ctx.params.id);
+    const { id } = ctx.params;
+    const snippet = await snippetsActivities.getSingle(id);
+    if (!snippet) { throw entityNotFound('snippet', id); }
     ctx.body = snippet;
     ctx.status = 200;
     await next();
