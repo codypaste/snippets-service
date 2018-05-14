@@ -1,12 +1,12 @@
-const { validatePayload } = require('./activityHelpers');
+const { validateBody } = require('./activityHelpers');
 
 module.exports = ({ Dao, JoiSchema, getResourceBody }) => {
 
   const { groupsDao } = Dao;
 
   const createNew = async (payload) => {
-    const validPayload = validatePayload(getResourceBody(payload), JoiSchema);
-    return groupsDao.create(validPayload);
+    const validBody = validateBody(getResourceBody(payload), JoiSchema);
+    return groupsDao.create(validBody);
   };
 
   const getSingle = async resourceId => groupsDao.getSingle(resourceId);

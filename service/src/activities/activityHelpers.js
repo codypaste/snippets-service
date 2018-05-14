@@ -1,6 +1,6 @@
 const joi = require('joi');
 
-const validatePayload = (input, JoiSchema) => {
+const validateBody = (input, JoiSchema) => {
   const schemaValidationError = (joi.validate(input, JoiSchema)).error;
   if (schemaValidationError) {
     const error = Error(schemaValidationError);
@@ -10,4 +10,4 @@ const validatePayload = (input, JoiSchema) => {
   return input;
 };
 
-module.exports = { validatePayload };
+module.exports = { validateBody };

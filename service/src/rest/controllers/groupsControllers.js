@@ -1,4 +1,5 @@
 const snippetsActivities = require('../../activities/activitiesFactory').groups;
+const { entityNotFound } = require('../../errors');
 
 const groupsController = () => {
 
@@ -10,7 +11,9 @@ const groupsController = () => {
   };
 
   const getGroup = async (ctx, next) => {
-    const group = await snippetsActivities.getSingle(ctx.params.id);
+    const { id } = ctx.params;
+    const group = await snippetsActivities.getSingle(id);
+    if (!group) { throw entityNotFound('group', id); }
     ctx.body = group;
     ctx.status = 200;
     await next();

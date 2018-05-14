@@ -20,4 +20,14 @@ describe('Getting groups GET /groups', () => {
     getResponse.statusCode.should.be.equal(200);
     getResponse.body.should.be.deepEqual(createdGroup);
   });
+
+  it('Should return 404 error when group does not exist', async () => {
+    const nonExistingGroupID = '5af7690a2cc2e10062e047a8';
+
+    const getResponse = await groupsTestHelpers
+      .getResource()
+      .getByID(nonExistingGroupID);
+    getResponse.statusCode.should.be.equal(404);
+    getResponse.error.text.should.be.equal(`group with id ${nonExistingGroupID} not found`);
+  });
 });
