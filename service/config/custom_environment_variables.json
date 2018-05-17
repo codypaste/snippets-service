@@ -1,0 +1,7 @@
+{
+  "database": {
+    "host": "MONGO_HOST",
+    "port": "MONGO_PORT",
+    "dbName": "codypaste_snippets"
+  }
+}
