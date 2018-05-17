@@ -30,4 +30,5 @@ describe('Getting groups GET /groups', () => {
     getResponse.statusCode.should.be.equal(404);
     getResponse.error.text.should.be.equal(`group with id ${nonExistingGroupID} not found`);
   });
+
 });

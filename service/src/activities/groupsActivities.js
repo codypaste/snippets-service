@@ -2,7 +2,7 @@ const { validateBody } = require('./activityHelpers');
 
 module.exports = ({ Dao, JoiSchema, getResourceBody }) => {
 
-  const { groupsDao } = Dao;
+  const { groupsDao, snippetsDao } = Dao;
 
   const createNew = async (payload) => {
     const validBody = validateBody(getResourceBody(payload), JoiSchema);
@@ -13,13 +13,20 @@ module.exports = ({ Dao, JoiSchema, getResourceBody }) => {
 
   const deleteSingle = async resourceId => groupsDao.deleteSingle(resourceId);
 
-  // TODO
-  const search = async payload => payload;
+  const searchAndGetAllSnippets = async ({ groupId }) => {
+    const foundGroup = await groupsDao.findById(groupId);
+    const snippetsFromGroup = await snippetsDao.findByGroup(groupId);
+    return {
+      group: foundGroup,
+      snippets: snippetsFromGroup,
+      snippetsAmount: snippetsFromGroup.length,
+    };
+  };
 
   return {
     createNew,
     getSingle,
     deleteSingle,
-    search,
+    searchAndGetAllSnippets,
   };
 };

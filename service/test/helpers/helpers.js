@@ -23,9 +23,34 @@ const helpers = ({ host, path, contentType }) => {
     },
   });
 
+  const searchForResource = () => ({
+    post: async (searchPayload) => {
+      logger.info('searchForResource.post', { host, path, contentType, searchPayload });
+      return request(host)
+        .post(path)
+        .set('Content-Type', contentType)
+        .send(searchPayload);
+    },
+  });
+
+  const tryToCreateAndExpectError = async (payload, statusCode = 422) => {
+    const response = await createResource().post(payload);
+    response.statusCode.should.be.equal(statusCode);
+    return response;
+  };
+
+  const createAndExpectSuccess = async (payload) => {
+    const response = await createResource().post(payload);
+    response.statusCode.should.be.equal(201);
+    return response;
+  };
+
   return {
     createResource,
     getResource,
+    tryToCreateAndExpectError,
+    createAndExpectSuccess,
+    searchForResource,
   };
 };
 

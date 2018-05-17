@@ -24,8 +24,20 @@ module.exports = ({ Dao, JoiSchema, getResourceBody }) => {
 
   const deleteSingle = async resourceId => snippetsDao.deleteSingle(resourceId);
 
-  // TODO
-  const search = async payload => payload;
+  const search = async ({
+    groupId,
+    title,
+    creationDate,
+    author,
+  }) => {
+    const records = await snippetsDao
+      .searchByParam(
+        groupId,
+        title,
+        creationDate,
+        author,
+      );
+  };
   return {
     createNew,
     getSingle,
