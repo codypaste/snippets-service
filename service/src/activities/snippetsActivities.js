@@ -1,4 +1,7 @@
-const { validateBody } = require('./activityHelpers');
+const {
+  validateBody,
+  validateIDFormat,
+} = require('./activityHelpers');
 const { groupForSnippetNotFound } = require('../errors');
 
 const groupForSnippetExists = async (groupID, groupsOrm) => {
@@ -20,12 +23,27 @@ module.exports = ({ Dao, JoiSchema, getResourceBody }) => {
     }
   };
 
-  const getSingle = async resourceId => snippetsDao.getSingle(resourceId);
+  const getSingle = async (resourceId) => {
+    const validID = validateIDFormat(resourceId);
+    return snippetsDao.getSingle(validID);
+  };
 
   const deleteSingle = async resourceId => snippetsDao.deleteSingle(resourceId);
 
-  // TODO
-  const search = async payload => payload;
+  const search = async ({
+    groupId,
+    title,
+    creationDate,
+    author,
+  }) => {
+    const records = await snippetsDao
+      .searchByParam(
+        groupId,
+        title,
+        creationDate,
+        author,
+      );
+  };
   return {
     createNew,
     getSingle,

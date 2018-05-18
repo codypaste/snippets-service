@@ -22,4 +22,11 @@ module.exports = {
       contentType: 'application/json',
     });
   },
+  get groupsSearchHelpers() {
+    return helpers({
+      host: host(),
+      path: '/groups/_search',
+      contentType: 'application/json',
+    });
+  },
 };

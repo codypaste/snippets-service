@@ -36,7 +36,10 @@ module.exports = {
   },
   get groups() {
     return groupsActivities({
-      Dao: { groupsDao },
+      Dao: {
+        snippetsDao,
+        groupsDao,
+      },
       JoiSchema: groupJoiSchema,
       getResourceBody: payload => payload,
     });

@@ -7,4 +7,8 @@ module.exports = {
     status: 404,
     message: `${resource} with id ${id} not found`,
   }),
+  badRequestFormat: (resource, value) => ({
+    status: 400,
+    message: `Bad value format : ${value} for : ${resource}`,
+  }),
 };
