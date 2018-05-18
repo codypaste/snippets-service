@@ -1,4 +1,3 @@
-const { GroupModel } = require('../models/GroupModel');
 const { SnippetModel } = require('../models/SnippetModel');
 
 const create = async payload => new SnippetModel(payload).save();

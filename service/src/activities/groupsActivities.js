@@ -1,4 +1,8 @@
-const { validateBody } = require('./activityHelpers');
+const {
+  validateBody,
+  validateIDFormat,
+} = require('./activityHelpers');
+const Errors = require('../errors');
 
 module.exports = ({ Dao, JoiSchema, getResourceBody }) => {
 
@@ -9,12 +13,16 @@ module.exports = ({ Dao, JoiSchema, getResourceBody }) => {
     return groupsDao.create(validBody);
   };
 
-  const getSingle = async resourceId => groupsDao.getSingle(resourceId);
+  const getSingle = async (resourceId) => {
+    const validID = validateIDFormat(resourceId);
+    return groupsDao.getSingle(validID);
+  };
 
   const deleteSingle = async resourceId => groupsDao.deleteSingle(resourceId);
 
   const searchAndGetAllSnippets = async ({ groupId }) => {
-    const foundGroup = await groupsDao.findById(groupId);
+    const foundGroup = await groupsDao.getSingle(groupId);
+    if (!foundGroup) { throw Errors.entityNotFound('Group', groupId); }
     const snippetsFromGroup = await snippetsDao.findByGroup(groupId);
     return {
       group: foundGroup,
