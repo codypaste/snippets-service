@@ -3,6 +3,7 @@ const {
   getSnippet,
   deleteSnippet,
   searchForSnippet,
+  patchSnippet,
 } = require('./controllers/snippetsControllers').snippetsController();
 const {
   createGroup,
@@ -14,9 +15,10 @@ module.exports = (router) => {
 
   // Snippets routes
   router.post('/snippets', createSnippet);
+  router.post('/snippets/_search', searchForSnippet);
   router.get('/snippets/:id', getSnippet);
   router.delete('/snippets/:id', deleteSnippet);
-  router.post('/snippets/_search', searchForSnippet);
+  router.patch('/snippets/:id', patchSnippet);
 
   // Groups routes
   router.post('/groups', createGroup);

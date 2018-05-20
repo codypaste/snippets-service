@@ -1,5 +1,4 @@
 const groupsActivities = require('../../activities/activitiesFactory').groups;
-const { entityNotFound } = require('../../errors');
 
 const groupsController = () => {
 
@@ -12,9 +11,7 @@ const groupsController = () => {
 
   const getGroup = async (ctx, next) => {
     const { id } = ctx.params;
-    const group = await groupsActivities.getSingle(id);
-    if (!group) { throw entityNotFound('group', id); }
-    ctx.body = group;
+    ctx.body = await groupsActivities.getSingle(id);
     ctx.status = 200;
     await next();
   };

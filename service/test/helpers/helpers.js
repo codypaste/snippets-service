@@ -33,6 +33,16 @@ const helpers = ({ host, path, contentType }) => {
     },
   });
 
+  const updateResource = () => ({
+    patch: async (id, patchPayload) => {
+      logger.info('updateResource.patch', { host, path, contentType, patchPayload });
+      return request(host)
+        .patch(`${path}/${id}`)
+        .set('Content-Type', contentType)
+        .send(patchPayload);
+    },
+  });
+
   const tryToCreateAndExpectError = async (payload, statusCode = 422) => {
     const response = await createResource().post(payload);
     response.statusCode.should.be.equal(statusCode);
@@ -51,6 +61,7 @@ const helpers = ({ host, path, contentType }) => {
     tryToCreateAndExpectError,
     createAndExpectSuccess,
     searchForResource,
+    updateResource,
   };
 };
 
