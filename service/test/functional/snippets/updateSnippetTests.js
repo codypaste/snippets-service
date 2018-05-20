@@ -25,9 +25,11 @@ describe('Updating snippet PATCH /snippets/:id', () => {
       .patch(snippetID, patchPayload);
 
     // then
-    console.log(patchedSnippet);
     patchedSnippet.statusCode.should.be.equal(204);
-    patchedSnippet.body.snippet.should.be.equal(newSnippetVal);
+    const updatedSnippet = (await snippetsTestHelpers
+      .getResource()
+      .getByID(snippetID)).body;
+    updatedSnippet.snippet.should.be.equal(newSnippetVal);
   });
 
   it('Should return an error while trying to patch non existing snippet', async () => {

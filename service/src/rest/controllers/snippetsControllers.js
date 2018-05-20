@@ -26,7 +26,7 @@ const snippetsController = () => {
   const patchSnippet = async (ctx, next) => {
     const { body: patchPayload } = ctx.request;
     const { id } = ctx.params;
-    ctx.body = await snippetsActivities.updateWithPatch(id, patchPayload);
+    await snippetsActivities.updateWithPatch(id, patchPayload);
     ctx.status = 204;
     await next();
   };
