@@ -1,5 +1,4 @@
 const snippetsActivities = require('../../activities/activitiesFactory').snippets;
-const { entityNotFound } = require('../../errors');
 
 const snippetsController = () => {
 
@@ -12,9 +11,7 @@ const snippetsController = () => {
 
   const getSnippet = async (ctx, next) => {
     const { id } = ctx.params;
-    const snippet = await snippetsActivities.getSingle(id);
-    if (!snippet) { throw entityNotFound('snippet', id); }
-    ctx.body = snippet;
+    ctx.body = await snippetsActivities.getSingle(id);
     ctx.status = 200;
     await next();
   };
@@ -26,8 +23,16 @@ const snippetsController = () => {
     await next();
   };
 
+  const patchSnippet = async (ctx, next) => {
+    const { body: patchPayload } = ctx.request;
+    const { id } = ctx.params;
+    ctx.body = await snippetsActivities.updateWithPatch(id, patchPayload);
+    ctx.status = 204;
+    await next();
+  };
+
+  // TODO
   const searchForSnippet = async (ctx, next) => {
-    // TODO
     await next();
   };
 
@@ -36,6 +41,7 @@ const snippetsController = () => {
     getSnippet,
     deleteSnippet,
     searchForSnippet,
+    patchSnippet,
   };
 };
 

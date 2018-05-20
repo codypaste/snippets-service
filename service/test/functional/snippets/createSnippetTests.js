@@ -1,19 +1,8 @@
 const should = require('should');
 const _ = require('lodash');
-
-const { groupCreationPayload } = require('../../payloads/groupPayloads');
+const { prepareGroupForSnippet } = require('../../helpers/commons');
 const { snippetCreationPayload } = require('../../payloads/snippetPayloads');
 const snippetsTestHelpers = require('../../helpers/helpersFactory').snippetsHelpers;
-const groupsTestHelpers = require('../../helpers/helpersFactory').groupsHelpers;
-
-const prepareGroupForSnippet = async () => {
-  const createdGroupRes = await groupsTestHelpers
-    .createResource()
-    .post(groupCreationPayload);
-  createdGroupRes.statusCode.should.be.equal(201);
-
-  return createdGroupRes;
-};
 
 describe('Creating snippet POST /snippets', () => {
   it('Should create new snippet', async () => {

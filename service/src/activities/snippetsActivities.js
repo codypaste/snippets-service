@@ -1,8 +1,12 @@
 const {
   validateBody,
   validateIDFormat,
+  validateAndPatch,
 } = require('./activityHelpers');
-const { groupForSnippetNotFound } = require('../errors');
+const {
+  groupForSnippetNotFound,
+  entityNotFound,
+} = require('../errors');
 
 const groupForSnippetExists = async (groupID, groupsOrm) => {
   const group = await groupsOrm.getSingle(groupID);
@@ -25,10 +29,20 @@ module.exports = ({ Dao, JoiSchema, getResourceBody }) => {
 
   const getSingle = async (resourceId) => {
     const validID = validateIDFormat(resourceId);
-    return snippetsDao.getSingle(validID);
+    const snippet = await snippetsDao.getSingle(validID);
+    if (!snippet) {
+      throw entityNotFound('snippet', resourceId);
+    }
+    return snippet;
   };
 
   const deleteSingle = async resourceId => snippetsDao.deleteSingle(resourceId);
+
+  const updateWithPatch = async (resourceId, patchPayload) => {
+    const snippetToPatch = await getSingle(resourceId);
+    const patchedSnippet = validateAndPatch(patchPayload, snippetToPatch);
+    return snippetsDao.updateById(resourceId, patchedSnippet);
+  };
 
   const search = async ({
     groupId,
@@ -36,6 +50,7 @@ module.exports = ({ Dao, JoiSchema, getResourceBody }) => {
     creationDate,
     author,
   }) => {
+    // TBD
     const records = await snippetsDao
       .searchByParam(
         groupId,
@@ -48,6 +63,7 @@ module.exports = ({ Dao, JoiSchema, getResourceBody }) => {
     createNew,
     getSingle,
     deleteSingle,
+    updateWithPatch,
     search,
   };
 };

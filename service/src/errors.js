@@ -11,4 +11,8 @@ module.exports = {
     status: 400,
     message: `Bad value format : ${value} for : ${resource}`,
   }),
+  badPatchPayloadFormat: validationError => ({
+    status: 400,
+    message: validationError,
+  }),
 };

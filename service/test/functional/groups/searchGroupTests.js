@@ -42,5 +42,21 @@ describe('searching groups POST /groups/_search', () => {
       snippet.group.should.be.equal(_id);
     });
   });
+
+  it('Should return error when group does not exist', async () => {
+    // given
+    const nonExistingGroupID = '5af7690a2cc2e10062e047a8';
+
+    // when
+    const searchPayload = { groupId: nonExistingGroupID };
+    const searchResponse = await groupsSearchHelpers
+      .searchForResource()
+      .post(searchPayload);
+
+    // then
+    searchResponse.statusCode.should.be.equal(404);
+    searchResponse.should.have.property('error');
+    searchResponse.error.text.should.be.equals(`Group with id ${nonExistingGroupID} not found`);
+   });
 })
 ;
