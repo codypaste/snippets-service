@@ -6,7 +6,7 @@ services:
     container_name: codypaste-service
     volumes:
       - ./service/logs:/usr/src/app/logs
-      - ./service/src:/usr/src/app/src
+      - ./service:/usr/src/app
     environment:
       MONGO_PORT: ${MONGO_PORT}
       MONGO_HOST: ${MONGO_HOST}
