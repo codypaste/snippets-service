@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const { lastModifiedPlugin } = require('../plugins/lastModifiedPlugin');
+
 const groupsCollectionName = require('./GroupModel').collectionName;
 
 const Schema = mongoose.Schema;
@@ -22,17 +24,13 @@ const SnippetModel = new Schema({
     type: String,
     required: [true, 'Missing snippet\'s name'],
   },
-  description: {
-    type: String,
-  },
   syntax: {
     type: String,
   },
-  creationDate: {
-    type: Date,
-    default: new Date(),
-  },
-});
+  lastModifiedTimestamp: String,
+}, { timestamps: { updatedAt: false, createdAt: true } });
+
+SnippetModel.plugin(lastModifiedPlugin);
 
 const collectionName = 'Snippets';
 module.exports = {

@@ -11,10 +11,11 @@ describe('Creating groups POST /groups', () => {
 
     postResponse.statusCode.should.be.equal(201);
     should.exist(postResponse.body);
-    should.exist(postResponse.body.creationDate);
+    should.exist(postResponse.body.createdAt);
     should.exist(postResponse.body.isPublic);
     should.exist(postResponse.body.sharedTo);
     should.exist(postResponse.body._id);
     should.exist(postResponse.body.title);
+    should.exist(postResponse.body.lastModifiedTimestamp);
   });
 });

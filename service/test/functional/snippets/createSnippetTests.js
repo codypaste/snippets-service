@@ -15,6 +15,11 @@ describe('Creating snippet POST /snippets', () => {
       .post(snippetPayload);
     createdSnippetRes.statusCode.should.be.equal(201);
     should.exist(createdSnippetRes.body);
+    should.exist(createdSnippetRes.body.lastModifiedTimestamp);
+    should.exist(createdSnippetRes.body.snippetName);
+    should.exist(createdSnippetRes.body.group);
+    should.exist(createdSnippetRes.body._id);
+    should.exist(createdSnippetRes.body.snippet);
   });
 
   it('Should not create snippet if mandatory parameter is missing', async () => {
