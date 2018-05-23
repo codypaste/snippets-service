@@ -1,8 +1,30 @@
+const moment = require('moment');
+const _ = require('lodash');
+
 const {
   validateBody,
   validateIDFormat,
 } = require('./activityHelpers');
-const { entityNotFound } = require('../errors');
+const {
+  entityNotFound,
+  resourceHasExpired,
+} = require('../errors');
+
+const checkExpirationAndGet = async (groupsDao, groupID) => {
+  const group = await groupsDao.getSingle(groupID);
+  if (!group) {
+    throw entityNotFound('group', groupID);
+  }
+  const { expirationDatetime } = group;
+
+  const requestDatetime = moment().utc().format();
+  if (!_.isNull(expirationDatetime) && moment(expirationDatetime).isBefore(requestDatetime)) {
+    throw resourceHasExpired('group', groupID);
+  }
+
+  return group;
+
+};
 
 module.exports = ({ Dao, JoiSchema, getResourceBody }) => {
 
@@ -15,19 +37,15 @@ module.exports = ({ Dao, JoiSchema, getResourceBody }) => {
 
   const getSingle = async (resourceId) => {
     const validID = validateIDFormat(resourceId);
-    const group = await groupsDao.getSingle(validID);
-    if (!group) {
-      throw entityNotFound('group', resourceId);
-    }
-    return group;
+    return checkExpirationAndGet(groupsDao, validID);
   };
 
   const deleteSingle = async resourceId => groupsDao.deleteSingle(resourceId);
 
   const searchAndGetAllSnippets = async ({ groupId }) => {
-    const foundGroup = await groupsDao.getSingle(groupId);
+    const foundGroup = await checkExpirationAndGet(groupsDao, groupId);
     if (!foundGroup) {
-      throw entityNotFound('Group', groupId);
+      throw entityNotFound('group', groupId);
     }
     const snippetsFromGroup = await snippetsDao.findByGroup(groupId);
 

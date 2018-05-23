@@ -43,6 +43,30 @@ describe('searching groups POST /groups/_search', () => {
     });
   });
 
+  it('Should return ExpirationDateError and no snippets while trying to search for group which has expired', async () => {
+    // given
+    groupCreationPayload.expirationDatetime = '2000-12-12';
+
+    const createdGroup = (await groupsTestHelpers
+      .createAndExpectSuccess(groupCreationPayload)).body;
+    const { _id } = createdGroup;
+
+    const snippetsAmount = 4;
+    await prepareSnippetsForGroup(_id, snippetsAmount);
+
+    // when
+    const searchPayload = { groupId: _id };
+    const searchResponse = await groupsSearchHelpers
+      .searchForResource()
+      .post(searchPayload);
+
+    // then
+    searchResponse.status.should.be.equal(423);
+    should.not.exist(searchResponse.body.snippets);
+    should.not.exist(searchResponse.body.group);
+    searchResponse.error.text.should.be.equal(`group with id ${_id} has expired`);
+  });
+
   it('Should return error when group does not exist', async () => {
     // given
     const nonExistingGroupID = '5af7690a2cc2e10062e047a8';
@@ -56,7 +80,7 @@ describe('searching groups POST /groups/_search', () => {
     // then
     searchResponse.statusCode.should.be.equal(404);
     searchResponse.should.have.property('error');
-    searchResponse.error.text.should.be.equals(`Group with id ${nonExistingGroupID} not found`);
-   });
+    searchResponse.error.text.should.be.equals(`group with id ${nonExistingGroupID} not found`);
+  });
 })
 ;

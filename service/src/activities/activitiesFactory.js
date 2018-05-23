@@ -12,8 +12,8 @@ const snippetJoiSchema = joi.object().keys({
   group: joi.objectId().required(),
   author: joi.string().default('unknown'), // This will be either userID (when logged) or default if not logged
   snippetName: joi.string().required(),
-  description: joi.string(),
   syntax: joi.string(),
+  lastModifiedTimestamp: joi.forbidden(),
 });
 
 const groupJoiSchema = joi.object().keys({
@@ -21,6 +21,8 @@ const groupJoiSchema = joi.object().keys({
   description: joi.string(),
   author: joi.string().default('unknown'),
   isPublic: joi.bool().default(true),
+  expirationDatetime: joi.date().iso().allow(null),
+  lastModifiedTimestamp: joi.forbidden(),
 });
 
 module.exports = {

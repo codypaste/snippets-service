@@ -17,5 +17,6 @@ describe('Creating groups POST /groups', () => {
     should.exist(postResponse.body._id);
     should.exist(postResponse.body.title);
     should.exist(postResponse.body.lastModifiedTimestamp);
+    postResponse.body.should.have.property('expirationDatetime');
   });
 });

@@ -15,4 +15,8 @@ module.exports = {
     status: 400,
     message: validationError,
   }),
+  resourceHasExpired: (resource, id) => ({
+    status: 423,
+    message: `${resource} with id ${id} has expired`,
+  }),
 };
