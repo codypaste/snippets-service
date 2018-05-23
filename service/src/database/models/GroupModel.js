@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const { lastModifiedPlugin } = require('../plugins/lastModifiedPlugin');
+
 const Schema = mongoose.Schema;
 
 const GroupModel = new Schema({
@@ -9,10 +11,6 @@ const GroupModel = new Schema({
   },
   description: {
     type: String,
-  },
-  creationDate: {
-    type: Date,
-    default: new Date(),
   },
   // It will be either logged user Id or not logged user default name
   author: {
@@ -25,7 +23,10 @@ const GroupModel = new Schema({
   sharedTo: [{
     type: Schema.Types.ObjectId,
   }],
-});
+  lastModifiedTimestamp: String,
+}, { timestamps: { updatedAt: false, createdAt: true } });
+
+GroupModel.plugin(lastModifiedPlugin);
 
 const collectionName = 'Groups';
 module.exports = {
