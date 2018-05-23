@@ -44,9 +44,7 @@ module.exports = ({ Dao, JoiSchema, getResourceBody }) => {
 
   const searchAndGetAllSnippets = async ({ groupId }) => {
     const foundGroup = await checkExpirationAndGet(groupsDao, groupId);
-    if (!foundGroup) {
-      throw entityNotFound('group', groupId);
-    }
+
     const snippetsFromGroup = await snippetsDao.findByGroup(groupId);
 
     return {

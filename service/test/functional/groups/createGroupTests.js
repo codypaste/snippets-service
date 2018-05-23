@@ -7,7 +7,7 @@ describe('Creating groups POST /groups', () => {
   it('Should create new group with valid payload', async () => {
     const postResponse = await groupsTestHelpers
       .createResource()
-      .post(groupCreationPayload);
+      .post(groupCreationPayload());
 
     postResponse.statusCode.should.be.equal(201);
     should.exist(postResponse.body);

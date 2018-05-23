@@ -20,7 +20,7 @@ describe('searching groups POST /groups/_search', () => {
   it('Should return group with all snippets, which belong to it', async () => {
     // given
     const createdGroup = (await groupsTestHelpers
-      .createAndExpectSuccess(groupCreationPayload)).body;
+      .createAndExpectSuccess(groupCreationPayload())).body;
     const { _id } = createdGroup;
 
     const snippetsAmount = 4;
@@ -45,10 +45,11 @@ describe('searching groups POST /groups/_search', () => {
 
   it('Should return ExpirationDateError and no snippets while trying to search for group which has expired', async () => {
     // given
-    groupCreationPayload.expirationDatetime = '2000-12-12';
+    const groupPayload = groupCreationPayload();
+    groupPayload.expirationDatetime = '2000-12-12';
 
     const createdGroup = (await groupsTestHelpers
-      .createAndExpectSuccess(groupCreationPayload)).body;
+      .createAndExpectSuccess(groupPayload)).body;
     const { _id } = createdGroup;
 
     const snippetsAmount = 4;

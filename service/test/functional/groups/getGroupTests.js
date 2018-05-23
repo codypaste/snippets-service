@@ -7,7 +7,7 @@ describe('Getting groups GET /groups', () => {
   it('Should get created group by id GET /groups/:id', async () => {
     const postResponse = await groupsTestHelpers
       .createResource()
-      .post(groupCreationPayload);
+      .post(groupCreationPayload());
 
     postResponse.statusCode.should.be.equal(201);
 
@@ -23,12 +23,12 @@ describe('Getting groups GET /groups', () => {
 
   it('Should return ExpirationDateError while trying to get group which has expired', async () => {
     // given
-    groupCreationPayload.expirationDatetime = '2000-12-12';
+    const groupPayload = groupCreationPayload();
+    groupPayload.expirationDatetime = '2000-12-12';
 
     const postResponse = await groupsTestHelpers
       .createResource()
-      .post(groupCreationPayload);
-
+      .post(groupPayload);
     postResponse.statusCode.should.be.equal(201);
 
     const createdGroup = postResponse.body;
