@@ -7,7 +7,7 @@ describe('Creating groups POST /groups', () => {
   it('Should create new group with valid payload', async () => {
     const postResponse = await groupsTestHelpers
       .createResource()
-      .post(groupCreationPayload);
+      .post(groupCreationPayload());
 
     postResponse.statusCode.should.be.equal(201);
     should.exist(postResponse.body);
@@ -17,5 +17,6 @@ describe('Creating groups POST /groups', () => {
     should.exist(postResponse.body._id);
     should.exist(postResponse.body.title);
     should.exist(postResponse.body.lastModifiedTimestamp);
+    postResponse.body.should.have.property('expirationDatetime');
   });
 });

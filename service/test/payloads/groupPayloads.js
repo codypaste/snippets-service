@@ -1,5 +1,6 @@
 module.exports = {
-  groupCreationPayload: {
+  groupCreationPayload: () => ({
     title: 'defaultGroupTitle',
-  },
+    expirationDatetime: null,
+  }),
 };

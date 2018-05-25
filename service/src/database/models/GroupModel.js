@@ -23,6 +23,10 @@ const GroupModel = new Schema({
   sharedTo: [{
     type: Schema.Types.ObjectId,
   }],
+  expirationDatetime: {
+    type: Date,
+    default: null,
+  },
   lastModifiedTimestamp: String,
 }, { timestamps: { updatedAt: false, createdAt: true } });
 

@@ -8,7 +8,7 @@ const groupsTestHelpers = require('../../helpers/helpersFactory').groupsHelpers;
 const prepareGroupForSnippet = async () => {
   const createdGroupRes = await groupsTestHelpers
     .createResource()
-    .post(groupCreationPayload);
+    .post(groupCreationPayload());
   createdGroupRes.statusCode.should.be.equal(201);
 
   return createdGroupRes;
