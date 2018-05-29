@@ -19,6 +19,7 @@ describe('Getting groups GET /groups', () => {
       .getByID(_id);
     getResponse.statusCode.should.be.equal(200);
     getResponse.body.should.be.deepEqual(createdGroup);
+    getResponse.body.should.not.have.property('password');
   });
 
   it('Should return ExpirationDateError while trying to get group which has expired', async () => {

@@ -22,10 +22,19 @@ const groupsController = () => {
     await next();
   };
 
+  const patchGroup = async (ctx, next) => {
+    const { body: patchPayload } = ctx.request;
+    const { id } = ctx.params;
+    await groupsActivities.updateWithPatch(id, patchPayload);
+    ctx.status = 204;
+    await next();
+  };
+
   return {
     createGroup,
     getGroup,
     getGroupWithSnippets,
+    patchGroup,
   };
 };
 

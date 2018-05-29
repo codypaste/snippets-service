@@ -22,7 +22,7 @@ describe('Updating snippet PATCH /snippets/:id', () => {
 
     const patchedSnippet = await snippetsTestHelpers
       .updateResource()
-      .patch(snippetID, patchPayload);
+      .patch(snippetID, [patchPayload]);
 
     // then
     patchedSnippet.statusCode.should.be.equal(204);
@@ -48,7 +48,7 @@ describe('Updating snippet PATCH /snippets/:id', () => {
 
     const patchedSnippet = await snippetsTestHelpers
       .updateResource()
-      .patch(snippetID, patchPayload);
+      .patch(snippetID, [patchPayload]);
 
     // then
     patchedSnippet.statusCode.should.be.equal(204);
@@ -71,7 +71,7 @@ describe('Updating snippet PATCH /snippets/:id', () => {
     // when
     const patchedSnippetRes = await snippetsTestHelpers
       .updateResource()
-      .patch(nonExistingSnippetID, patchPayload);
+      .patch(nonExistingSnippetID, [patchPayload]);
 
     // then
     patchedSnippetRes.statusCode.should.be.equal(404);

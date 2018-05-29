@@ -11,11 +11,11 @@ const prepareGroupForSnippet = async () => {
 };
 
 const preparePatchPayload = (path, value, op = 'replace') => (
-  [{
+  {
     op,
     path: `/${path}`,
     value,
-  }]);
+  });
 module.exports = {
   prepareGroupForSnippet,
   preparePatchPayload,

@@ -1,6 +1,7 @@
 const joi = require('joi');
-const Errors = require('../errors');
 const jsonpatch = require('fast-json-patch');
+
+const Errors = require('../errors');
 
 const validateBody = (input, JoiSchema) => {
   const schemaValidationError = (joi.validate(input, JoiSchema)).error;
@@ -28,8 +29,17 @@ const validateAndPatch = (patchPayload, objToPatch) => {
   return jsonpatch.applyPatch(objToPatch, patchPayload).newDocument;
 };
 
+const disposeOfProhibitedFields = (resource) => {
+  const prohibitedFields = ['password'];
+  prohibitedFields.forEach((field) => {
+    resource[field] = undefined;
+  });
+  return resource;
+};
+
 module.exports = {
   validateBody,
   validateIDFormat,
   validateAndPatch,
+  disposeOfProhibitedFields,
 };
