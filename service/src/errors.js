@@ -19,4 +19,8 @@ module.exports = {
     status: 423,
     message: `${resource} with id ${id} has expired`,
   }),
+  unauthorizedGroupSearch: id => ({
+    status: 401,
+    message: `unauthorized for group with id ${id}`,
+  }),
 };

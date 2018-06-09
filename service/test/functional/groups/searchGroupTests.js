@@ -34,9 +34,10 @@ describe('searching groups POST /groups/_search', () => {
 
     // then
     searchResponse.statusCode.should.be.equal(200);
-    should.exist(searchResponse.body.snippets);
-    should.exist(searchResponse.body.group);
-    should.exist(searchResponse.body.snippetsAmount);
+    searchResponse.body.should.have.property('group');
+    searchResponse.body.should.have.property('snippets');
+    searchResponse.body.should.have.property('snippetsAmount');
+    searchResponse.body.group.should.not.have.property('password');
     searchResponse.body.snippetsAmount.should.be.equal(snippetsAmount);
     searchResponse.body.snippets.forEach((snippet) => {
       snippet.group.should.be.equal(_id);
@@ -82,6 +83,85 @@ describe('searching groups POST /groups/_search', () => {
     searchResponse.statusCode.should.be.equal(404);
     searchResponse.should.have.property('error');
     searchResponse.error.text.should.be.equals(`group with id ${nonExistingGroupID} not found`);
+  });
+
+  it('Should return 401 unauthorized error when password for private group is not provided', async () => {
+    // given
+    const testPassword = 'P@$$w0rD';
+    const groupPayload = Object.assign(
+      groupCreationPayload(),
+      { isPublic: false },
+      { password: testPassword });
+
+    const createdGroup = (await groupsTestHelpers
+      .createAndExpectSuccess(groupPayload)).body;
+    const { _id } = createdGroup;
+
+    // when
+    const searchPayload = { groupId: _id };
+    const searchResponse = await groupsSearchHelpers
+      .searchForResource()
+      .post(searchPayload);
+
+    // then
+    searchResponse.status.should.be.equal(401);
+    should.not.exist(searchResponse.body.snippets);
+    should.not.exist(searchResponse.body.group);
+    searchResponse.error.text.should.be.equal(`unauthorized for group with id ${_id}`);
+  });
+
+  it('Should return 401 unauthorized error when provided invalid password for private group', async () => {
+    // given
+    const testPassword = 'P@$$w0rD';
+    const groupPayload = Object.assign(
+      groupCreationPayload(),
+      { isPublic: false },
+      { password: testPassword });
+
+    const createdGroup = (await groupsTestHelpers
+      .createAndExpectSuccess(groupPayload)).body;
+    const { _id } = createdGroup;
+
+    // when
+    const searchPayload = { groupId: _id, password: 'InvalidP@$$w0rD' };
+    const searchResponse = await groupsSearchHelpers
+      .searchForResource()
+      .post(searchPayload);
+
+    // then
+    searchResponse.status.should.be.equal(401);
+    should.not.exist(searchResponse.body.snippets);
+    should.not.exist(searchResponse.body.group);
+    searchResponse.error.text.should.be.equal(`unauthorized for group with id ${_id}`);
+  });
+
+  it('Should return group with all snippets, which belong to it when password for private group is correct', async () => {
+    // given
+    const testPassword = 'P@$$w0rD';
+    const groupPayload = Object.assign(
+      groupCreationPayload(),
+      { isPublic: false },
+      { password: testPassword });
+
+    const createdGroup = (await groupsTestHelpers
+      .createAndExpectSuccess(groupPayload)).body;
+    const { _id } = createdGroup;
+
+    const snippetsAmount = 4;
+    await prepareSnippetsForGroup(_id, snippetsAmount);
+
+    // when
+    const searchPayload = { groupId: _id, password: testPassword };
+    const searchResponse = await groupsSearchHelpers
+      .searchForResource()
+      .post(searchPayload);
+
+    // then
+    searchResponse.status.should.be.equal(200);
+    searchResponse.body.should.have.property('snippets');
+    searchResponse.body.should.have.property('group');
+    searchResponse.body.should.have.property('snippetsAmount');
+    searchResponse.body.snippetsAmount.should.be.equal(snippetsAmount);
   });
 })
 ;

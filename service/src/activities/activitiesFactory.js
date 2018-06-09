@@ -21,6 +21,7 @@ const groupJoiSchema = joi.object().keys({
   description: joi.string(),
   author: joi.string().default('unknown'),
   isPublic: joi.bool().default(true),
+  password: joi.string().when('isPublic', { is: false, then: joi.required() }),
   expirationDatetime: joi.date().iso().allow(null),
   lastModifiedTimestamp: joi.forbidden(),
 });

@@ -9,6 +9,7 @@ const {
   createGroup,
   getGroup,
   getGroupWithSnippets,
+  patchGroup,
 } = require('./controllers/groupsControllers').groupsController();
 
 module.exports = (router) => {
@@ -23,5 +24,6 @@ module.exports = (router) => {
   // Groups routes
   router.post('/groups', createGroup);
   router.get('/groups/:id', getGroup);
+  router.patch('/groups/:id', patchGroup);
   router.post('/groups/_search', getGroupWithSnippets);
 };

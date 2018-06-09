@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 
 const { lastModifiedPlugin } = require('../plugins/lastModifiedPlugin');
+const { encryptPlugin } = require('../plugins/encryptingPlugin');
 
 const Schema = mongoose.Schema;
 
 const GroupModel = new Schema({
   title: {
     type: String,
-    required: [true, 'Missing group\'s title'],
   },
   description: {
     type: String,
@@ -20,6 +20,9 @@ const GroupModel = new Schema({
     type: Boolean,
     default: true,
   },
+  password: {
+    type: String,
+  },
   sharedTo: [{
     type: Schema.Types.ObjectId,
   }],
@@ -31,6 +34,7 @@ const GroupModel = new Schema({
 }, { timestamps: { updatedAt: false, createdAt: true } });
 
 GroupModel.plugin(lastModifiedPlugin);
+GroupModel.plugin(encryptPlugin, { SALT_WORK_FACTOR: 10 });
 
 const collectionName = 'Groups';
 module.exports = {
