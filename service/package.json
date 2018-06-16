@@ -12,6 +12,7 @@
     "joi-objectid": "^2.0.0",
     "koa": "^2.5.1",
     "koa-bodyparser": "^4.2.0",
+    "koa-etag": "^3.0.0",
     "koa-router": "^7.4.0",
     "lodash": "^4.17.10",
     "mocha": "^5.1.1",

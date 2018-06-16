@@ -1,6 +1,7 @@
 const Koa = require('koa');
 const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
+const etag = require('koa-etag');
 const config = require('config');
 
 const logger = require('./utils/logger');
@@ -20,7 +21,8 @@ const service = () => {
       .use(bodyParser())
       .use(errorCatcher)
       .use(router.routes())
-      .use(router.allowedMethods());
+      .use(router.allowedMethods())
+      .use(etag());
 
     routesHandler(router);
 
