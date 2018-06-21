@@ -29,6 +29,7 @@
     "nodemon": "^1.11.0"
   },
   "scripts": {
+    "start-prod": "node index.js",
     "start": "./node_modules/.bin/nodemon --inspect=0.0.0.0:5858 --ignore test/ index.js",
     "test": "cd ./test/functional && mocha *"
   }
