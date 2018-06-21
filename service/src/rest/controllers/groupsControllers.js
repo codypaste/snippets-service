@@ -19,6 +19,7 @@ const groupsController = () => {
   const getGroupWithSnippets = async (ctx, next) => {
     ctx.body = await groupsActivities.searchAndGetAllSnippets(ctx.request.body);
     ctx.status = 200;
+    ctx.set('Cache-Control', 'public, max-age=31536000');
     await next();
   };
 

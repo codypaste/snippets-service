@@ -12,4 +12,4 @@ RUN npm install --quiet --production --no-progress --registry=${registry:-https:
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["yarn", "start-prod"]
