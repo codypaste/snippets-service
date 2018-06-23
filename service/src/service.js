@@ -20,14 +20,14 @@ const service = () => {
 
     app
       .use(bodyParser())
-      .use(errorCatcher)
-      .use(router.routes())
-      .use(router.allowedMethods())
       .use(etag())
       .use(cors({
         maxAge: 600,
         keepHeadersOnError: true,
-      }));
+      }))
+      .use(errorCatcher)
+      .use(router.routes())
+      .use(router.allowedMethods());
 
     routesHandler(router);
 
