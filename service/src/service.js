@@ -26,6 +26,7 @@ const service = () => {
       .use(etag())
       .use(cors({
         maxAge: 600,
+        keepHeadersOnError: true,
       }));
 
     routesHandler(router);
