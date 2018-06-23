@@ -3,6 +3,7 @@ const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
 const etag = require('koa-etag');
 const config = require('config');
+const cors = require('@koa/cors');
 
 const logger = require('./utils/logger');
 const mongoDB = require('./database/mongoDB');
@@ -19,10 +20,16 @@ const service = () => {
 
     app
       .use(bodyParser())
+      .use(etag({
+        weak: false,
+      }))
+      .use(cors({
+        maxAge: 600,
+        keepHeadersOnError: true,
+      }))
       .use(errorCatcher)
       .use(router.routes())
-      .use(router.allowedMethods())
-      .use(etag());
+      .use(router.allowedMethods());
 
     routesHandler(router);
 
