@@ -20,7 +20,9 @@ const service = () => {
 
     app
       .use(bodyParser())
-      .use(etag())
+      .use(etag({
+        weak: false,
+      }))
       .use(cors({
         maxAge: 600,
         keepHeadersOnError: true,
