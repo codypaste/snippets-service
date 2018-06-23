@@ -24,7 +24,9 @@ const service = () => {
       .use(router.routes())
       .use(router.allowedMethods())
       .use(etag())
-      .use(cors());
+      .use(cors({
+        maxAge: 600,
+      }));
 
     routesHandler(router);
 
