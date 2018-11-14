@@ -25,6 +25,10 @@ const GroupModel = new Schema({
     type: Boolean,
     default: true,
   },
+  isEncrypted: {
+    type: Boolean,
+    default: false,
+  },
   password: {
     type: String,
   },
