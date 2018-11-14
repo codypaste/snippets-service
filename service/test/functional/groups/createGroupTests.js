@@ -1,4 +1,5 @@
 const should = require('should');
+const _ = require('lodash');
 
 const { groupCreationPayload } = require('../../payloads/groupPayloads');
 const groupsTestHelpers = require('../../helpers/helpersFactory').groupsHelpers;

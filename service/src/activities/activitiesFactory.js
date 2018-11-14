@@ -19,9 +19,10 @@ const snippetJoiSchema = joi.object().keys({
 const groupJoiSchema = joi.object().keys({
   title: joi.string().required(),
   description: joi.string(),
-  author: joi.string().default('unknown'),
+  author: joi.string().when('isProtected', { is: true, then: joi.required() }).default('unknown'),
   isPublic: joi.bool().default(true),
   password: joi.string().when('isPublic', { is: false, then: joi.required() }),
+  isProtected: joi.bool().default(false),
   expirationDatetime: joi.date().iso().allow(null),
   lastModifiedTimestamp: joi.forbidden(),
 });

@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const { lastModifiedPlugin } = require('../plugins/lastModifiedPlugin');
 const { encryptPlugin } = require('../plugins/encryptingPlugin');
 
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 const GroupModel = new Schema({
   title: {
@@ -15,6 +15,11 @@ const GroupModel = new Schema({
   // It will be either logged user Id or not logged user default name
   author: {
     type: String,
+  },
+  // true if access to group requires authentication -> author !== default
+  isProtected: {
+    type: Boolean,
+    default: false,
   },
   isPublic: {
     type: Boolean,
