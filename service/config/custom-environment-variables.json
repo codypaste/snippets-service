@@ -3,5 +3,10 @@
     "host": "MONGO_HOST",
     "port": "MONGO_PORT",
     "dbName": "codypaste_snippets"
+  },
+  "rateLimiter": {
+    "redisEndpoint": "REDIS_ENDPOINT",
+    "timeWindowInSeconds": "TIMEWINDOW_IN_SECONDS",
+    "quotaInTimeWindow": "QUOTA_IN_TIMEWINDOW"
   }
 }
