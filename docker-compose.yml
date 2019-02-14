@@ -1,7 +1,7 @@
 version: '2'
 
 services:
-  codypaste-service: 
+  codypaste-service:
     build: .
     container_name: codypaste-service
     volumes:
@@ -10,6 +10,9 @@ services:
     environment:
       MONGO_PORT: ${MONGO_PORT}
       MONGO_HOST: ${MONGO_HOST}
+      REDIS_ENDPOINT: redis
+      TIMEWINDOW_IN_SECONDS: 30
+      QUOTA_IN_TIMEWINDOW: 10
     command: ['sh', '-c', 'yarn start']
     ports:
       - 3000:3000
@@ -23,3 +26,9 @@ services:
       - /home/mongo:/data/db
     ports:
     - "27017:27017"
+
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - 6379:6379

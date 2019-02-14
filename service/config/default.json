@@ -7,5 +7,10 @@
     "host": "mongo_database",
     "port": 27017,
     "dbName": "codypaste_snippets"
+  },
+  "rateLimiter": {
+    "redisEndpoint": "",
+    "timeWindowInSeconds": "",
+    "quotaInTimeWindow": ""
   }
 }

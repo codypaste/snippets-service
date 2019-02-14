@@ -23,4 +23,8 @@ module.exports = {
     status: 401,
     message: `unauthorized for group with id ${id}`,
   }),
+  quotaReached: (ip, limit, window, remaining, reset) => ({
+    status: 429,
+    message: `Too many requests from IP=${ip}. Limit=${limit}; Window=${window}s; Remaining=${remaining}; Reset at=${reset}`,
+  }),
 };

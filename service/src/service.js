@@ -9,8 +9,11 @@ const logger = require('./utils/logger');
 const mongoDB = require('./database/mongoDB');
 const routesHandler = require('./rest/routesHandler');
 const errorCatcher = require('./middlewares/errorCatcher');
+const rateLimiter = require('./middlewares/rateLimiter');
 
 const app = new Koa();
+app.proxy = true;
+
 const router = new Router();
 
 const service = () => {
@@ -19,7 +22,9 @@ const service = () => {
     await mongoDB(config.get('database')).connect();
 
     app
+      .use(errorCatcher)
       .use(bodyParser())
+      .use(rateLimiter)
       .use(etag({
         weak: false,
       }))
@@ -27,7 +32,6 @@ const service = () => {
         maxAge: 600,
         keepHeadersOnError: true,
       }))
-      .use(errorCatcher)
       .use(router.routes())
       .use(router.allowedMethods());
 
