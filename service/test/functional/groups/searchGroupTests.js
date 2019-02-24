@@ -3,8 +3,10 @@ const should = require('should');
 const { groupCreationPayload } = require('../../payloads/groupPayloads');
 const { snippetCreationPayload } = require('../../payloads/snippetPayloads');
 const groupsTestHelpers = require('../../helpers/helpersFactory').groupsHelpers;
-const snippetsTestHelpers = require('../../helpers/helpersFactory').snippetsHelpers;
-const groupsSearchHelpers = require('../../helpers/helpersFactory').groupsSearchHelpers;
+const snippetsTestHelpers = require('../../helpers/helpersFactory')
+  .snippetsHelpers;
+const groupsSearchHelpers = require('../../helpers/helpersFactory')
+  .groupsSearchHelpers;
 
 const prepareSnippetsForGroup = async (groupId, numOfSnippets) => {
   const requests = [];
@@ -16,18 +18,18 @@ const prepareSnippetsForGroup = async (groupId, numOfSnippets) => {
 };
 
 describe('searching groups POST /groups/_search', () => {
-
   it('Should return group with all snippets, which belong to it', async () => {
     // given
-    const createdGroup = (await groupsTestHelpers
-      .createAndExpectSuccess(groupCreationPayload())).body;
-    const { _id } = createdGroup;
+    const createdGroup = (await groupsTestHelpers.createAndExpectSuccess(
+      groupCreationPayload(),
+    )).body;
+    const { id } = createdGroup;
 
     const snippetsAmount = 4;
-    await prepareSnippetsForGroup(_id, snippetsAmount);
+    await prepareSnippetsForGroup(id, snippetsAmount);
 
     // when
-    const searchPayload = { groupId: _id };
+    const searchPayload = { groupId: id };
     const searchResponse = await groupsSearchHelpers
       .searchForResource()
       .post(searchPayload);
@@ -36,12 +38,8 @@ describe('searching groups POST /groups/_search', () => {
     searchResponse.statusCode.should.be.equal(200);
     searchResponse.body.should.have.property('group');
     searchResponse.body.should.have.property('snippets');
-    searchResponse.body.should.have.property('snippetsAmount');
     searchResponse.body.group.should.not.have.property('password');
-    searchResponse.body.snippetsAmount.should.be.equal(snippetsAmount);
-    searchResponse.body.snippets.forEach((snippet) => {
-      snippet.group.should.be.equal(_id);
-    });
+    searchResponse.body.snippets.should.have.length(snippetsAmount);
   });
 
   it('Should return ExpirationDateError and no snippets while trying to search for group which has expired', async () => {
@@ -49,15 +47,16 @@ describe('searching groups POST /groups/_search', () => {
     const groupPayload = groupCreationPayload();
     groupPayload.expirationDatetime = '2000-12-12';
 
-    const createdGroup = (await groupsTestHelpers
-      .createAndExpectSuccess(groupPayload)).body;
-    const { _id } = createdGroup;
+    const createdGroup = (await groupsTestHelpers.createAndExpectSuccess(
+      groupPayload,
+    )).body;
+    const { id } = createdGroup;
 
     const snippetsAmount = 4;
-    await prepareSnippetsForGroup(_id, snippetsAmount);
+    await prepareSnippetsForGroup(id, snippetsAmount);
 
     // when
-    const searchPayload = { groupId: _id };
+    const searchPayload = { groupId: id };
     const searchResponse = await groupsSearchHelpers
       .searchForResource()
       .post(searchPayload);
@@ -66,7 +65,9 @@ describe('searching groups POST /groups/_search', () => {
     searchResponse.status.should.be.equal(423);
     should.not.exist(searchResponse.body.snippets);
     should.not.exist(searchResponse.body.group);
-    searchResponse.error.text.should.be.equal(`group with id ${_id} has expired`);
+    searchResponse.error.text.should.be.equal(
+      `group with id ${id} has expired`,
+    );
   });
 
   it('Should return error when group does not exist', async () => {
@@ -82,7 +83,9 @@ describe('searching groups POST /groups/_search', () => {
     // then
     searchResponse.statusCode.should.be.equal(404);
     searchResponse.should.have.property('error');
-    searchResponse.error.text.should.be.equals(`group with id ${nonExistingGroupID} not found`);
+    searchResponse.error.text.should.be.equals(
+      `group with id ${nonExistingGroupID} not found`,
+    );
   });
 
   it('Should return 401 unauthorized error when password for private group is not provided', async () => {
@@ -91,14 +94,16 @@ describe('searching groups POST /groups/_search', () => {
     const groupPayload = Object.assign(
       groupCreationPayload(),
       { isPublic: false },
-      { password: testPassword });
+      { password: testPassword },
+    );
 
-    const createdGroup = (await groupsTestHelpers
-      .createAndExpectSuccess(groupPayload)).body;
-    const { _id } = createdGroup;
+    const createdGroup = (await groupsTestHelpers.createAndExpectSuccess(
+      groupPayload,
+    )).body;
+    const { id } = createdGroup;
 
     // when
-    const searchPayload = { groupId: _id };
+    const searchPayload = { groupId: id };
     const searchResponse = await groupsSearchHelpers
       .searchForResource()
       .post(searchPayload);
@@ -107,7 +112,9 @@ describe('searching groups POST /groups/_search', () => {
     searchResponse.status.should.be.equal(401);
     should.not.exist(searchResponse.body.snippets);
     should.not.exist(searchResponse.body.group);
-    searchResponse.error.text.should.be.equal(`unauthorized for group with id ${_id}`);
+    searchResponse.error.text.should.be.equal(
+      `unauthorized for group with id ${id}`,
+    );
   });
 
   it('Should return 401 unauthorized error when provided invalid password for private group', async () => {
@@ -116,14 +123,16 @@ describe('searching groups POST /groups/_search', () => {
     const groupPayload = Object.assign(
       groupCreationPayload(),
       { isPublic: false },
-      { password: testPassword });
+      { password: testPassword },
+    );
 
-    const createdGroup = (await groupsTestHelpers
-      .createAndExpectSuccess(groupPayload)).body;
-    const { _id } = createdGroup;
+    const createdGroup = (await groupsTestHelpers.createAndExpectSuccess(
+      groupPayload,
+    )).body;
+    const { id } = createdGroup;
 
     // when
-    const searchPayload = { groupId: _id, password: 'InvalidP@$$w0rD' };
+    const searchPayload = { groupId: id, password: 'InvalidP@$$w0rD' };
     const searchResponse = await groupsSearchHelpers
       .searchForResource()
       .post(searchPayload);
@@ -132,7 +141,9 @@ describe('searching groups POST /groups/_search', () => {
     searchResponse.status.should.be.equal(401);
     should.not.exist(searchResponse.body.snippets);
     should.not.exist(searchResponse.body.group);
-    searchResponse.error.text.should.be.equal(`unauthorized for group with id ${_id}`);
+    searchResponse.error.text.should.be.equal(
+      `unauthorized for group with id ${id}`,
+    );
   });
 
   it('Should return group with all snippets, which belong to it when password for private group is correct', async () => {
@@ -141,17 +152,19 @@ describe('searching groups POST /groups/_search', () => {
     const groupPayload = Object.assign(
       groupCreationPayload(),
       { isPublic: false },
-      { password: testPassword });
+      { password: testPassword },
+    );
 
-    const createdGroup = (await groupsTestHelpers
-      .createAndExpectSuccess(groupPayload)).body;
-    const { _id } = createdGroup;
+    const createdGroup = (await groupsTestHelpers.createAndExpectSuccess(
+      groupPayload,
+    )).body;
+    const { id } = createdGroup;
 
     const snippetsAmount = 4;
-    await prepareSnippetsForGroup(_id, snippetsAmount);
+    await prepareSnippetsForGroup(id, snippetsAmount);
 
     // when
-    const searchPayload = { groupId: _id, password: testPassword };
+    const searchPayload = { groupId: id, password: testPassword };
     const searchResponse = await groupsSearchHelpers
       .searchForResource()
       .post(searchPayload);
@@ -160,8 +173,6 @@ describe('searching groups POST /groups/_search', () => {
     searchResponse.status.should.be.equal(200);
     searchResponse.body.should.have.property('snippets');
     searchResponse.body.should.have.property('group');
-    searchResponse.body.should.have.property('snippetsAmount');
-    searchResponse.body.snippetsAmount.should.be.equal(snippetsAmount);
+    searchResponse.body.snippets.should.have.length(snippetsAmount);
   });
-})
-;
+});

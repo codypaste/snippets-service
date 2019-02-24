@@ -2,32 +2,29 @@ const should = require('should');
 const _ = require('lodash');
 const { prepareGroupForSnippet } = require('../../helpers/commons');
 const { snippetCreationPayload } = require('../../payloads/snippetPayloads');
-const snippetsTestHelpers = require('../../helpers/helpersFactory').snippetsHelpers;
+const snippetsTestHelpers = require('../../helpers/helpersFactory')
+  .snippetsHelpers;
 
 describe('Creating snippet POST /snippets', () => {
   it('Should create new snippet', async () => {
     const createdGroupRes = await prepareGroupForSnippet();
 
-    const { _id: groupID } = createdGroupRes.body;
+    const { id: groupID } = createdGroupRes.body;
     const snippetPayload = snippetCreationPayload(groupID);
     const createdSnippetRes = await snippetsTestHelpers
       .createResource()
       .post(snippetPayload);
     createdSnippetRes.statusCode.should.be.equal(201);
     should.exist(createdSnippetRes.body);
-    should.exist(createdSnippetRes.body.lastModifiedTimestamp);
     should.exist(createdSnippetRes.body.snippetName);
-    should.exist(createdSnippetRes.body.group);
-    should.exist(createdSnippetRes.body._id);
-    should.exist(createdSnippetRes.body.snippet);
+    should.exist(createdSnippetRes.body.id);
   });
 
   it('Should not create snippet if mandatory parameter is missing', async () => {
-
     const mandatoryParameters = ['snippet', 'group', 'snippetName'];
 
     const createdGroupRes = await prepareGroupForSnippet();
-    const { _id: groupID } = createdGroupRes.body;
+    const { id: groupID } = createdGroupRes.body;
 
     const requestPromisses = mandatoryParameters.map((param) => {
       const snippetPayload = _.omit(snippetCreationPayload(groupID), param);
@@ -44,7 +41,9 @@ describe('Creating snippet POST /snippets', () => {
       .createResource()
       .post(snippetPayload);
     createdSnippetRes.statusCode.should.be.equal(404);
-    createdSnippetRes.error.text.should.be.equal('Group provided for this snippet does not exist');
+    createdSnippetRes.error.text.should.be.equal(
+      'Group provided for this snippet does not exist',
+    );
   });
 
   it('Should not create new snippet when group is not provided', async () => {

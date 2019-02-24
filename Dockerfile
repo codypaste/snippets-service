@@ -12,4 +12,4 @@ ADD ./service /usr/src/app
 
 EXPOSE 3000
 
-CMD ["yarn", "start-prod"]
+CMD ["yarn", "start"]

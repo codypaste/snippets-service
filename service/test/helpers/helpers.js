@@ -3,10 +3,14 @@ const request = require('supertest');
 const logger = require('../../src/utils/logger');
 
 const helpers = ({ host, path, contentType }) => {
-
   const createResource = () => ({
     post: async (payload) => {
-      logger.info('createResource.post', { host, path, contentType, payload });
+      logger.info('createResource.post', {
+        host,
+        path,
+        contentType,
+        payload,
+      });
       return request(host)
         .post(path)
         .set('Content-Type', contentType)
@@ -16,7 +20,12 @@ const helpers = ({ host, path, contentType }) => {
 
   const getResource = () => ({
     getByID: async (id) => {
-      logger.info('getResource.getByID', { host, path, contentType, id });
+      logger.info('getResource.getByID', {
+        host,
+        path,
+        contentType,
+        id,
+      });
       return request(host)
         .get(`${path}/${id}`)
         .set('Content-Type', contentType);
@@ -25,21 +34,16 @@ const helpers = ({ host, path, contentType }) => {
 
   const searchForResource = () => ({
     post: async (searchPayload) => {
-      logger.info('searchForResource.post', { host, path, contentType, searchPayload });
+      logger.info('searchForResource.post', {
+        host,
+        path,
+        contentType,
+        searchPayload,
+      });
       return request(host)
         .post(path)
         .set('Content-Type', contentType)
         .send(searchPayload);
-    },
-  });
-
-  const updateResource = () => ({
-    patch: async (id, patchPayload) => {
-      logger.info('updateResource.patch', { host, path, contentType, patchPayload });
-      return request(host)
-        .patch(`${path}/${id}`)
-        .set('Content-Type', contentType)
-        .send(patchPayload);
     },
   });
 
@@ -61,7 +65,6 @@ const helpers = ({ host, path, contentType }) => {
     tryToCreateAndExpectError,
     createAndExpectSuccess,
     searchForResource,
-    updateResource,
   };
 };
 

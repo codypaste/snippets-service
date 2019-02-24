@@ -4,21 +4,13 @@ const jsonpatch = require('fast-json-patch');
 const Errors = require('../errors');
 
 const validateBody = (input, JoiSchema) => {
-  const schemaValidationError = (joi.validate(input, JoiSchema)).error;
-  if (schemaValidationError) {
-    const error = Error(schemaValidationError);
-    error.status = 422;
-    throw error;
+  const { value, error } = joi.validate(input, JoiSchema);
+  if (error) {
+    const e = Error(error);
+    e.status = 422;
+    throw e;
   }
-  return input;
-};
-
-const validateIDFormat = (id) => {
-  // Regex matching mongo ObjectID
-  if (!id.match(/^[0-9a-fA-F]{24}$/)) {
-    throw Errors.badRequestFormat('ObjectID', id);
-  }
-  return id;
+  return value;
 };
 
 const validateAndPatch = (patchPayload, objToPatch) => {
@@ -31,15 +23,15 @@ const validateAndPatch = (patchPayload, objToPatch) => {
 
 const disposeOfProhibitedFields = (resource) => {
   const prohibitedFields = ['password'];
+  const fixedObject = resource;
   prohibitedFields.forEach((field) => {
-    resource[field] = undefined;
+    fixedObject[field] = undefined;
   });
-  return resource;
+  return fixedObject;
 };
 
 module.exports = {
   validateBody,
-  validateIDFormat,
   validateAndPatch,
   disposeOfProhibitedFields,
 };

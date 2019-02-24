@@ -1,9 +1,8 @@
-version: '2'
+version: '3'
 
 services:
   codypaste-service:
-    build: .
-    container_name: codypaste-service
+    image: 140303875034.dkr.ecr.eu-west-1.amazonaws.com/codypaste-snippets-service:latest
     volumes:
       - ./service/logs:/usr/src/app/logs
       - ./service:/usr/src/app
@@ -12,20 +11,35 @@ services:
       MONGO_HOST: ${MONGO_HOST}
       REDIS_ENDPOINT: redis
       TIMEWINDOW_IN_SECONDS: 30
-      QUOTA_IN_TIMEWINDOW: 10
-    command: ['sh', '-c', 'yarn start']
+      QUOTA_IN_TIMEWINDOW: 1000 # high number so tests pass
+      PRISMA_ENDPOINT: http://prisma-service:4466/codypaste/development
+    command: ['sh', '-c', 'yarn start-dev']
     ports:
       - 3000:3000
-    links:
-      - mongoDB
 
-  mongoDB:
-    image: mongo:latest
-    container_name: mongo_database
-    volumes:
-      - /home/mongo:/data/db
+  prisma:
+    image: prismagraphql/prisma:1.23
+    container_name: prisma-service
     ports:
-    - "27017:27017"
+      - "4466:4466"
+    environment:
+      PRISMA_MANAGEMENT_API_SECRET: abc
+      PRISMA_CONFIG: |
+        port: 4466
+        databases:
+          default:
+            connector: postgres
+            host: postgres
+            port: 5432
+            user: postgres
+            migrations: true
+            database: codypaste
+
+  postgres:
+    image: postgres
+    container_name: postgres
+    ports:
+      - 5432:5432
 
   redis:
     image: redis
