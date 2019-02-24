@@ -1,0 +1,37 @@
+type Group {
+  id: ID! @unique
+  title: String!
+  description: String
+  author: String
+  isPublic: Boolean
+  isEncrypted: Boolean,
+  password: String
+  isProtected: Boolean
+  expirationDatetime: DateTime,
+  createdAt: DateTime!
+  updatedAt: DateTime!
+
+  snippets: [Snippet]!
+}
+
+type Snippet {
+  id: ID! @unique
+  author: String
+  snippetName: String!
+  syntax: String,
+  createdAt: DateTime!
+  updatedAt: DateTime!
+
+  chunks: [SnippetChunk]!
+  group: Group!
+
+}
+
+type SnippetChunk {
+  id: ID! @unique
+  value: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+
+  snippet: Snippet!
+}

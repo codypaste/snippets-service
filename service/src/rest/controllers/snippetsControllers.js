@@ -1,7 +1,7 @@
-const snippetsActivities = require('../../activities/activitiesFactory').snippets;
+const snippetsActivities = require('../../activities/activitiesFactory')
+  .snippets;
 
 const snippetsController = () => {
-
   const createSnippet = async (ctx, next) => {
     const createdSnippet = await snippetsActivities.createNew(ctx.request.body);
     ctx.body = createdSnippet;
@@ -23,25 +23,10 @@ const snippetsController = () => {
     await next();
   };
 
-  const patchSnippet = async (ctx, next) => {
-    const { body: patchPayload } = ctx.request;
-    const { id } = ctx.params;
-    await snippetsActivities.updateWithPatch(id, patchPayload);
-    ctx.status = 204;
-    await next();
-  };
-
-  // TODO
-  const searchForSnippet = async (ctx, next) => {
-    await next();
-  };
-
   return {
     createSnippet,
     getSnippet,
     deleteSnippet,
-    searchForSnippet,
-    patchSnippet,
   };
 };
 

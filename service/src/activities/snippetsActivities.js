@@ -1,69 +1,78 @@
-const {
-  validateBody,
-  validateIDFormat,
-  validateAndPatch,
-} = require('./activityHelpers');
-const {
-  groupForSnippetNotFound,
-  entityNotFound,
-} = require('../errors');
+const Promise = require('bluebird');
+const fastChunkString = require('fast-chunk-string');
 
-const groupForSnippetExists = async (groupID, groupsOrm) => {
-  const group = await groupsOrm.getSingle(groupID);
+const { validateBody } = require('./activityHelpers');
+const { entityNotFound, groupForSnippetNotFound } = require('../errors');
+
+const ensureGroup = async (groupsDao, groupId) => {
+  const group = await groupsDao.getSingle(groupId);
+
   if (!group) {
     throw groupForSnippetNotFound;
   }
+
   return true;
 };
 
-module.exports = ({ Dao, JoiSchema, getResourceBody }) => {
-
-  const { snippetsDao, groupsDao } = Dao;
-
+module.exports = ({
+  dao,
+  groupsDao,
+  snippetChunksDao,
+  JoiSchema,
+  getResourceBody,
+}) => {
   const createNew = async (payload) => {
     const validBody = validateBody(getResourceBody(payload), JoiSchema);
-    if (await groupForSnippetExists(validBody.group, groupsDao)) {
-      return snippetsDao.create(validBody);
-    }
+
+    const groupId = validBody.group;
+
+    await ensureGroup(groupsDao, groupId);
+
+    validBody.group = {
+      connect: {
+        id: groupId,
+      },
+    };
+
+    const snippetValue = validBody.snippet;
+
+    delete validBody.snippet;
+    const snippet = await dao.create(validBody);
+
+    const chunked = fastChunkString(snippetValue, {
+      size: 64000,
+      unicodeAware: false,
+    });
+
+    await Promise.map(chunked, (chunk) => {
+      const obj = {
+        value: chunk,
+        snippet: {
+          connect: {
+            id: snippet.id,
+          },
+        },
+      };
+
+      return snippetChunksDao.create(obj);
+    });
+
+    return snippet;
   };
 
   const getSingle = async (resourceId) => {
-    const validID = validateIDFormat(resourceId);
-    const snippet = await snippetsDao.getSingle(validID);
+    const snippet = await dao.getSingle(resourceId);
     if (!snippet) {
       throw entityNotFound('snippet', resourceId);
     }
     return snippet;
   };
 
-  const deleteSingle = async resourceId => snippetsDao.deleteSingle(resourceId);
+  const deleteSingle = async () => {};
 
-  const updateWithPatch = async (resourceId, patchPayload) => {
-    const snippetToPatch = await getSingle(resourceId);
-    const patchedSnippet = validateAndPatch(patchPayload, snippetToPatch);
-    return snippetsDao.updateById(resourceId, patchedSnippet);
-  };
-
-  const search = async ({
-    groupId,
-    title,
-    creationDate,
-    author,
-  }) => {
-    // TBD
-    const records = await snippetsDao
-      .searchByParam(
-        groupId,
-        title,
-        creationDate,
-        author,
-      );
-  };
   return {
     createNew,
     getSingle,
     deleteSingle,
-    updateWithPatch,
-    search,
   };
 };

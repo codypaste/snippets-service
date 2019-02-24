@@ -1,7 +1,6 @@
 const groupsActivities = require('../../activities/activitiesFactory').groups;
 
 const groupsController = () => {
-
   const createGroup = async (ctx, next) => {
     const newGroup = await groupsActivities.createNew(ctx.request.body);
     ctx.body = newGroup;
@@ -23,19 +22,10 @@ const groupsController = () => {
     await next();
   };
 
-  const patchGroup = async (ctx, next) => {
-    const { body: patchPayload } = ctx.request;
-    const { id } = ctx.params;
-    await groupsActivities.updateWithPatch(id, patchPayload);
-    ctx.status = 204;
-    await next();
-  };
-
   return {
     createGroup,
     getGroup,
     getGroupWithSnippets,
-    patchGroup,
   };
 };
 
