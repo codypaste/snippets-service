@@ -1,6 +1,7 @@
 const redis = require('redis');
 const bluebird = require('bluebird');
 const config = require('config');
+const crypto = require('crypto');
 
 const errors = require('../errors');
 
@@ -22,13 +23,13 @@ const prepareHeaders = (limitPerWindow, remaining, resetAt) => {
   };
 };
 
-const incrementForIP = async (ip) => {
-  const exists = await client.existsAsync(ip);
+const incrementForIPHash = async (ipHash) => {
+  const exists = await client.existsAsync(ipHash);
   if (!exists) {
-    await client.setAsync(ip, 0, 'EX', timeWindow);
+    await client.setAsync(ipHash, 0, 'EX', timeWindow);
   }
-  const afterIncrement = await client.incrAsync(ip);
-  const ttl = await client.ttlAsync(ip);
+  const afterIncrement = await client.incrAsync(ipHash);
+  const ttl = await client.ttlAsync(ipHash);
 
   let limit = quota - afterIncrement;
   if (limit < 0) {
@@ -49,7 +50,9 @@ const rateLimiter = async (ctx, next) => {
     await initRedisClient();
   }
 
-  const headers = await incrementForIP(ctx.request.ip);
+  const { ip } =  ctx.request;
+  const ipHash = crypto.createHash('sha256').update(ip, 'utf8').digest('hex');
+  const headers = await incrementForIPHash(ipHash);
 
   ctx.set('RateLimit-Limit', headers['RateLimit-Limit']);
   ctx.set('RateLimit-Remaining', headers['RateLimit-Remaining']);

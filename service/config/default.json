@@ -3,11 +3,7 @@
     "PORT": 3000,
     "host": "0.0.0.0"
   },
-  "database": {
-    "host": "mongo_database",
-    "port": 27017,
-    "dbName": "codypaste_snippets"
-  },
+  "apmServerUrl": "",
   "rateLimiter": {
     "redisEndpoint": "",
     "timeWindowInSeconds": "",

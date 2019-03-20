@@ -34,7 +34,6 @@ describe('Creating snippet POST /snippets', () => {
   });
 
   it('Should not create new snippet when provided group does not exist', async () => {
-    // it has to be mongo ObjectId type
     const nonExistingGroupID = '5af7690a2cc2e10062e047a8';
     const snippetPayload = snippetCreationPayload(nonExistingGroupID);
     const createdSnippetRes = await snippetsTestHelpers
