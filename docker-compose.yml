@@ -1,25 +1,40 @@
-version: '3'
+version: "3"
 
 services:
-  codypaste-service:
+  gateway:
+    image: traefik:1.7.8
+    ports:
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.toml:/traefik.toml
+    labels:
+      - traefik.enable=false
+
+  backend:
     image: 140303875034.dkr.ecr.eu-west-1.amazonaws.com/codypaste-snippets-service:latest
     volumes:
       - ./service/logs:/usr/src/app/logs
       - ./service:/usr/src/app
     environment:
-      MONGO_PORT: ${MONGO_PORT}
-      MONGO_HOST: ${MONGO_HOST}
+      APM_SERVER_URL: http://apm_server:8200
+      PRISMA_ENDPOINT: http://prisma:4466/codypaste/development
+      QUOTA_IN_TIMEWINDOW: 1000 # high number so tests pass
       REDIS_ENDPOINT: redis
       TIMEWINDOW_IN_SECONDS: 30
-      QUOTA_IN_TIMEWINDOW: 1000 # high number so tests pass
-      PRISMA_ENDPOINT: http://prisma-service:4466/codypaste/development
-    command: ['sh', '-c', 'yarn start-dev']
-    ports:
-      - 3000:3000
+    command: ["sh", "-c", "yarn start-dev"]
+    labels:
+      - traefik.enable=true
+      - traefik.backend=backend
+      - traefik.port=3000
+      - traefik.frontend.rule=Host:localhost
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://localhost:12201"
 
   prisma:
-    image: prismagraphql/prisma:1.23
-    container_name: prisma-service
+    image: prismagraphql/prisma:1.28
     ports:
       - "4466:4466"
     environment:
@@ -34,15 +49,42 @@ services:
             user: postgres
             migrations: true
             database: codypaste
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://localhost:12201"
 
   postgres:
     image: postgres
-    container_name: postgres
     ports:
       - 5432:5432
 
+  apm_server:
+    image: docker.elastic.co/apm/apm-server:6.6.2
+    environment:
+      ESHOST: "http://elasticsearch:9200"
+    command: apm-server -e -E output.elasticsearch.hosts=$${ESHOST}
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.6.2
+    ports:
+      - "9200:9200"
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.6.2
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      SERVER_HOST: 0.0.0.0
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:6.6.2
+    volumes:
+      - ./logstash.conf:/usr/share/logstash/pipeline/codypaste.conf
+    ports:
+      - "12201:12201/udp"
+
   redis:
     image: redis
-    container_name: redis
-    ports:
-      - 6379:6379
+

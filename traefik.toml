@@ -1,0 +1,27 @@
+debug = false
+
+logLevel = "ERROR"
+
+defaultEntryPoints = ["http"]
+
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+
+  [entryPoints.dashboard]
+   address=":8080"
+   [entryPoints.dashboard.auth]
+     [entryPoints.dashboard.auth.basic]
+       users = [
+         "admin:$2y$10$1CrpTdvU6JrtXF.yMKCBpeAs2sEj2kVWk2P2q76DBOlR1omLkVmSm",
+       ]
+
+[retry]
+
+[api]
+entrypoint="dashboard"
+
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+watch = true
+exposedByDefault = false
