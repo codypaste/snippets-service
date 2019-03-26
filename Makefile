@@ -9,7 +9,7 @@ publish-image:
 npm:
 	cd ./service && npm i
 
-start: build-image
+start: npm build-image
 	docker-compose up -d
 
 stop:
@@ -19,7 +19,7 @@ test:
 	cd service && npm test
 
 deploy-development:
-	cd service && PRISMA_ENDPOINT=http://localhost:4466/codypaste/development npm run deploy
+	cd service/src/database && PRISMA_ENDPOINT=http://localhost:4466/codypaste/development prisma deploy
 
 generate:
 	cd service && npm run deploy
