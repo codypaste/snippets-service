@@ -39,7 +39,7 @@ const groupsDao = {
 
 const snippetsDao = {
   create: prisma.createSnippet,
-  delete: prisma.deleteSnippet,
+  removeSingle: id => prisma.deleteSnippet({ id }),
   getSingle: id => prisma.snippet({ id }),
 };
 

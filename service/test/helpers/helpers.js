@@ -47,6 +47,17 @@ const helpers = ({ host, path, contentType }) => {
     },
   });
 
+  const deleteResource = async (id) => {
+    logger.info('deleteResource', {
+      host,
+      path,
+      contentType,
+      id,
+    });
+    return request(host)
+      .delete(`${path}/${id}`);
+  };
+
   const tryToCreateAndExpectError = async (payload, statusCode = 422) => {
     const response = await createResource().post(payload);
     response.statusCode.should.be.equal(statusCode);
@@ -65,6 +76,7 @@ const helpers = ({ host, path, contentType }) => {
     tryToCreateAndExpectError,
     createAndExpectSuccess,
     searchForResource,
+    deleteResource,
   };
 };
 

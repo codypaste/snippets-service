@@ -7,6 +7,7 @@ const {
   createGroup,
   getGroup,
   getGroupWithSnippets,
+  deleteGroup,
 } = require('./controllers/groupsControllers').groupsController();
 
 module.exports = (router) => {
@@ -18,5 +19,6 @@ module.exports = (router) => {
   // Groups routes
   router.post('/groups', createGroup);
   router.get('/groups/:id', getGroup);
+  router.delete('/groups/:id', deleteGroup);
   router.post('/groups/_search', getGroupWithSnippets);
 };

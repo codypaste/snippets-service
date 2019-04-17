@@ -68,7 +68,7 @@ module.exports = ({
     return snippet;
   };
 
-  const deleteSingle = async () => {};
+  const deleteSingle = async resourceId => dao.removeSingle(resourceId);
 
   return {
     createNew,
