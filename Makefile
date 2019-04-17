@@ -20,6 +20,3 @@ test:
 
 deploy-development:
 	cd service/src/database && PRISMA_ENDPOINT=http://localhost:4466/codypaste/development prisma deploy
-
-generate:
-	cd service && npm run deploy
