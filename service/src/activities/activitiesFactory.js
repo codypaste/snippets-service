@@ -46,7 +46,7 @@ const snippetsDao = {
 const snippetChunksDao = {
   create: prisma.createSnippetChunk,
   getChunksForSnippet: id => prisma.snippet({ id }).chunks(),
-  removeChunksForSnippet: snippet => prisma.deleteManySnippetChunks({ snippet: { id: snippet.id } }),
+  removeChunksForSnippet: s => prisma.deleteManySnippetChunks({ snippet: { id: s.id } }),
 };
 
 module.exports = {

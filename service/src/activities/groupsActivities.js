@@ -2,7 +2,6 @@ const moment = require('moment');
 const _ = require('lodash');
 const bcrypt = require('bcryptjs');
 const Promise = require('bluebird');
-const logger = require('../utils/logger');
 
 const {
   validateBody,
