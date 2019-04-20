@@ -2,6 +2,7 @@ const moment = require('moment');
 const _ = require('lodash');
 const bcrypt = require('bcryptjs');
 const Promise = require('bluebird');
+const logger = require('../utils/logger');
 
 const {
   validateBody,
@@ -78,16 +79,17 @@ module.exports = ({
     return disposeOfProhibitedFields(group);
   };
 
-  const deleteSingle = resourceId => dao.removeSingle(resourceId);
-
   const deleteGroupWithItsSnippets = async (groupId) => {
     const group = await dao.getSingle(groupId);
     if (!group) {
       throw entityNotFound('group', groupId);
     }
     const snippets = await dao.getSnippetsForGroup(groupId);
-    await Promise.map(snippets, async snippet => snippetsDao.removeSingle(snippet.id));    
-    await deleteSingle(groupId);
+    await Promise.map(snippets, async (snippet) => {
+      await snippetChunksDao.removeChunksForSnippet(snippet);
+      await snippetsDao.removeSingle(snippet.id);
+    });
+    return dao.removeSingle(groupId);
   };
 
   const searchAndGetAllSnippets = async ({ groupId, password }) => {
@@ -118,7 +120,6 @@ module.exports = ({
   return {
     createNew,
     getSingle,
-    deleteSingle,
     searchAndGetAllSnippets,
     deleteGroupWithItsSnippets,
   };

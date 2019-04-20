@@ -16,8 +16,7 @@ const groupsController = () => {
   };
 
   const deleteGroup = async (ctx, next) => {
-    const { id } = ctx.params;
-    await groupsActivities.deleteGroupWithItsSnippets(id);
+    await groupsActivities.deleteGroupWithItsSnippets(ctx.params.id);
     ctx.status = 204;
     await next();
   };

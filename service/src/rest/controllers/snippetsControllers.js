@@ -17,8 +17,7 @@ const snippetsController = () => {
   };
 
   const deleteSnippet = async (ctx, next) => {
-    const snippet = await snippetsActivities.deleteSingle(ctx.params.id);
-    ctx.body = snippet;
+    await snippetsActivities.deleteSingle(ctx.params.id);
     ctx.status = 204;
     await next();
   };

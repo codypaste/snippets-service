@@ -43,10 +43,10 @@ describe('Deleting snippets DELETE /groups', () => {
     getDeletedSnippetRes.statusCode.should.be.equal(404);
   });
 
-  it('Should return 404 error when snippet does not exist', async () => {
+  it('Should return 404 error when deleting group which does not exist', async () => {
     const nonExistingSnippetID = '5af7690a2cc2e10062e047a8';
 
-    const getResponse = await snippetsTestHelpers
+    const getResponse = await groupsTestHelpers
       .deleteResource(nonExistingSnippetID);
     getResponse.statusCode.should.be.equal(404);
   });
