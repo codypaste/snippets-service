@@ -15,6 +15,12 @@ const groupsController = () => {
     await next();
   };
 
+  const deleteGroup = async (ctx, next) => {
+    await groupsActivities.deleteGroupWithItsSnippets(ctx.params.id);
+    ctx.status = 204;
+    await next();
+  };
+
   const getGroupWithSnippets = async (ctx, next) => {
     ctx.body = await groupsActivities.searchAndGetAllSnippets(ctx.request.body);
     ctx.status = 200;
@@ -26,6 +32,7 @@ const groupsController = () => {
     createGroup,
     getGroup,
     getGroupWithSnippets,
+    deleteGroup,
   };
 };
 

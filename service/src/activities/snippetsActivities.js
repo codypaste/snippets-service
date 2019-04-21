@@ -68,7 +68,13 @@ module.exports = ({
     return snippet;
   };
 
-  const deleteSingle = async () => {};
+  const deleteSingle = async (resourceId) => {
+    const snippet = await dao.getSingle(resourceId);
+    if (!snippet) {
+      throw entityNotFound('snippet', resourceId);
+    }
+    return dao.removeSingle(resourceId);
+  };
 
   return {
     createNew,

@@ -40,7 +40,11 @@ const hashPasswordIfApplicable = async (group) => {
 };
 
 module.exports = ({
-  dao, snippetChunksDao, JoiSchema, getResourceBody,
+  dao,
+  snippetChunksDao,
+  snippetsDao,
+  JoiSchema,
+  getResourceBody,
 }) => {
   const createNew = async (payload) => {
     const validBody = validateBody(getResourceBody(payload), JoiSchema);
@@ -74,7 +78,18 @@ module.exports = ({
     return disposeOfProhibitedFields(group);
   };
 
-  const deleteSingle = resourceId => dao.removeSingle(resourceId);
+  const deleteGroupWithItsSnippets = async (groupId) => {
+    const group = await dao.getSingle(groupId);
+    if (!group) {
+      throw entityNotFound('group', groupId);
+    }
+    const snippets = await dao.getSnippetsForGroup(groupId);
+    await Promise.map(snippets, async (snippet) => {
+      await snippetChunksDao.removeChunksForSnippet(snippet);
+      await snippetsDao.removeSingle(snippet.id);
+    });
+    return dao.removeSingle(groupId);
+  };
 
   const searchAndGetAllSnippets = async ({ groupId, password }) => {
     if (!groupId) {
@@ -104,7 +119,7 @@ module.exports = ({
   return {
     createNew,
     getSingle,
-    deleteSingle,
     searchAndGetAllSnippets,
+    deleteGroupWithItsSnippets,
   };
 };
